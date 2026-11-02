@@ -1,0 +1,16 @@
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 1
+names: ['drone']
+
+roboflow:
+  workspace: drone-object-detection-ckzef
+  project: drone-object-detection-5twsu
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/drone-object-detection-ckzef/drone-object-detection-5twsu/dataset/1
+
+task: detect
+mode: train

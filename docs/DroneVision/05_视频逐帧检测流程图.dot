@@ -1,0 +1,37 @@
+digraph G {
+  graph [bgcolor="white", pad="0.28", nodesep="0.32", ranksep="0.55", fontname="Noto Sans CJK SC", splines=polyline, outputorder=edgesfirst];
+  node [fontname="Noto Sans CJK SC", fontsize=15, color="#C8DBEE", fontcolor="#193450", style="rounded,filled", fillcolor="#F0F7FF", shape=box, margin="0.18,0.13", penwidth=1.4];
+  edge [fontname="Noto Sans CJK SC", fontsize=11, color="#6090C3", fontcolor="#466B90", penwidth=1.5, arrowsize=0.65];
+
+  graph [rankdir=TB, ranksep="0.35", nodesep="0.36"];
+  start [label="点击开始检测\nstart_detect()", fillcolor="#D8EAFF", fontsize=16];
+  session [label="session_id 自增\n重置进度 / 数量 / FPS / 状态"];
+  thread [label="创建 VideoDetectThread\n绑定带 session_id 的信号"];
+  open [label="VideoCapture 打开视频文件或摄像头", fillcolor="#EBF4FF"];
+  writer [label="需要导出时准备 VideoWriter", fillcolor="#EBF4FF"];
+  run [label="_running 为 True？", shape=diamond, fillcolor="#FFF1D8", color="#E8B66A"];
+  pause [label="_paused 为 True？", shape=diamond, fillcolor="#FFF1D8", color="#E8B66A"];
+  wait [label="等待 0.05秒\n暂停保持当前进度", fillcolor="#FFF8EC", color="#E8C68C"];
+  read [label="cap.read() 读取一帧"];
+  ok [label="读取成功？", shape=diamond, fillcolor="#FFF1D8", color="#E8B66A"];
+  detect [label="DroneDetector.detect(frame)\n执行YOLOv8检测并绘框", fillcolor="#DCEBFF", color="#85ACDA"];
+  fps [label="计算FPS / 更新当前帧目标数\n可选写入 VideoWriter"];
+  signal [label="Qt信号发射\nframe_ready · progress · session_id", fillcolor="#E5F5EE", color="#84BFA3"];
+  release [label="退出循环\n释放 VideoCapture / VideoWriter", fillcolor="#E9EFF7"];
+  finished [label="发射结束信号\n自然结束 / 手动停止", fillcolor="#E9EFF7"];
+  sid [label="主线程校验 session_id\n忽略旧轮次的延迟信号", shape=diamond, fillcolor="#FFF1D8", color="#E8B66A"];
+  end [label="更新状态栏与导航按钮\n恢复再次开始的能力", fillcolor="#DAF1E6", color="#81C19F", fontsize=16];
+  start -> session -> thread -> open -> writer -> run;
+  run -> release [label="否（停止）", color="#B77F6F"];
+  run -> pause [label="是"];
+  pause -> wait [label="是"];
+  wait -> pause [style=dashed, constraint=false, color="#DAA04B"];
+  pause -> read [label="否"];
+  read -> ok;
+  ok -> release [label="否（结束）", color="#B77F6F"];
+  ok -> detect [label="是"];
+  detect -> fps -> signal;
+  signal -> run [label="下一帧", color="#2F84D3", constraint=false, minlen=2];
+  release -> finished -> sid -> end;
+
+}

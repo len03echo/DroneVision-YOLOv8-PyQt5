@@ -1,0 +1,29 @@
+digraph G {
+  graph [bgcolor="white", pad="0.28", nodesep="0.32", ranksep="0.55", fontname="Noto Sans CJK SC", splines=polyline, outputorder=edgesfirst];
+  node [fontname="Noto Sans CJK SC", fontsize=15, color="#C8DBEE", fontcolor="#193450", style="rounded,filled", fillcolor="#F0F7FF", shape=box, margin="0.18,0.13", penwidth=1.4];
+  edge [fontname="Noto Sans CJK SC", fontsize=11, color="#6090C3", fontcolor="#466B90", penwidth=1.5, arrowsize=0.65];
+
+  graph [rankdir=TB, ranksep="0.34", nodesep="0.32"];
+  start [label="启动 train_drone.py", fillcolor="#D8EAFF", fontsize=16];
+  args [label="读取默认参数 / 命令行覆盖\n80 Epoch · 640 ImgSz · Batch 8"];
+  cuda [label="CUDA可用？", shape=diamond, fillcolor="#FFF1D8", color="#E8B66A"];
+  fail [label="提示GPU不可用\n退出（除非明确选择CPU）", fillcolor="#FFF0EB", color="#EAB6A7"];
+  resume [label="是否恢复中断训练？", shape=diamond, fillcolor="#FFF1D8", color="#E8B66A"];
+  last [label="加载 last.pt\n继续训练", fillcolor="#EAF3FF"];
+  pre [label="加载 yolov8n.pt\n迁移学习初始化", fillcolor="#EAF3FF"];
+  train [label="model.train()\ndata.yaml · 训练集2005张", fillcolor="#DDEBFF", color="#76A5DA", fontsize=16];
+  validate [label="逐轮训练并验证\n验证集573张 · 记录Loss / mAP"];
+  weights [label="保存 best.pt / last.pt\n生成 results.csv、results.png"];
+  test [label="best.pt → model.val(split=\"test\")\n测试集285张", fillcolor="#E5F5EE", color="#84BFA3"];
+  metrics [label="输出 Precision / Recall\nmAP50 / mAP50-95", fillcolor="#E5F5EE", color="#84BFA3"];
+  end [label="训练与评估完成\n保存评估输出", fillcolor="#D8F0E5", color="#74BD9D", fontsize=16];
+  start -> args -> cuda;
+  cuda -> fail [label="否", color="#D89B88"];
+  cuda -> resume [label="是"];
+  resume -> last [label="是"];
+  resume -> pre [label="否"];
+  {rank=same; last; pre;}
+  last -> train; pre -> train;
+  train -> validate -> weights -> test -> metrics -> end;
+
+}

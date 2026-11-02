@@ -1,0 +1,32 @@
+digraph G {
+  graph [bgcolor="white", pad="0.28", nodesep="0.32", ranksep="0.55", fontname="Noto Sans CJK SC", splines=polyline, outputorder=edgesfirst];
+  node [fontname="Noto Sans CJK SC", fontsize=15, color="#C8DBEE", fontcolor="#193450", style="rounded,filled", fillcolor="#F0F7FF", shape=box, margin="0.18,0.13", penwidth=1.4];
+  edge [fontname="Noto Sans CJK SC", fontsize=11, color="#6090C3", fontcolor="#466B90", penwidth=1.5, arrowsize=0.65];
+
+  graph [rankdir=TB, ranksep="0.60", nodesep="0.38"];
+  user [label="用户操作\n（图片 / 视频 / 摄像头）", fillcolor="#E0EEFF", color="#76A9E8", fontsize=17];
+  subgraph cluster_gui {
+    label="GUI层  ·  drone_vision_gui.py"; labelloc="t"; fontsize=18; fontname="Noto Sans CJK SC"; fontcolor="#315A86";
+    color="#B7D1EA"; fillcolor="#F9FCFF"; style="rounded,filled"; margin=18;
+    main [label="MainWindow  主窗口\n页面控制 · 状态管理 · Qt信号槽", fillcolor="#CFE5FF", color="#6A9ED4", fontsize=16];
+    nav [label="NavPanel  左侧导航\n模式切换 · 导入 · 开始/暂停/停止\n保存当前帧 · 导出视频"];
+    param [label="ParamPanel  检测参数\n模型权重 · Conf / IoU / ImgSz\n标签和置信度显示开关"];
+    image [label="ImagePage  图片检测\nImageDetectThread  异步推理"];
+    video [label="VideoPage  视频检测\nVideoDetectThread  逐帧推理"];
+    camera [label="VideoPage  摄像头检测\nVideoDetectThread  实时推理"];
+    {rank=same; nav; param;}
+    {rank=same; image; video; camera;}
+    main -> nav [label="双向信号槽", dir=both]; main -> param [label="控制/反馈", dir=both];
+    nav -> image [style=invis, weight=9]; param -> camera [style=invis, weight=9];
+    main -> video [minlen=2];
+    nav -> param [style=invis]; image -> video [style=invis]; video -> camera [style=invis];
+  }
+  det [label="DroneDetector  ·  drone_detector.py\nload_model()  加载权重\ndetect()  单帧推理\n_draw_boxes()  绘制边界框", fillcolor="#E8F4FF", fontsize=16];
+  core [label="Ultralytics YOLOv8n\n预训练权重 / 训练得到的 best.pt", fillcolor="#E7F5F2", color="#96C9B9", fontsize=16];
+  user -> main [label="触发交互"];
+  image -> det [label="线程调用", minlen=2];
+  video -> det; camera -> det;
+  param -> det [style=dashed, label="更新参数", constraint=false];
+  det -> core [label="模型加载 / 推理"];
+
+}

@@ -1,0 +1,69 @@
+# ============================================================
+# DroneVision .gitignore
+# ============================================================
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---- Virtual environments ----
+.venv/
+venv/
+env/
+conda-environment/
+
+# ---- IDE ----
+.idea/
+.vscode/
+*.swp
+
+# ---- PyInstaller build artifacts ----
+build/
+dist/
+*.spec.bak
+
+# ---- Training outputs / runs ----
+runs/
+*.cache
+labels.cache
+train_batch*.jpg
+val_batch*.jpg
+
+# ---- Full dataset (do NOT commit; see dataset/data.yaml.example) ----
+dataset/train/
+dataset/valid/
+dataset/test/
+dataset/*.cache
+
+# ---- Runtime outputs ----
+outputs/images/
+outputs/videos/
+outputs/snapshots/
+outputs/logs/
+
+# ---- Test videos of unclear source (provide your own) ----
+test_videos/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.wmv
+
+# ---- Runtime-generated temp icon ----
+_check_icon.png
+
+# ---- OS junk ----
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+docs/DroneVision_Final_Report.md
+docs/DroneVision_Diagram_Prompts.md
+docs/DroneVision_Screenshot_Checklist.md

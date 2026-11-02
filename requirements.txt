@@ -1,0 +1,23 @@
+# ============================================================
+# DroneVision 运行依赖
+# 实测环境：Python 3.9 / PyTorch 2.2.0+cu118 / Ultralytics 8.2.19
+#
+# 注意：PyTorch 的 CUDA 版本请优先使用官方索引单独安装，
+# 不要直接 pip install torch（默认会装 CPU 版）。
+# 参考命令（CUDA 11.8）：
+#   pip install torch==2.2.0 torchvision==0.17.0 --index-url https://download.pytorch.org/whl/cu118
+# ============================================================
+
+# ---- GUI ----
+PyQt5>=5.15                    # GPL-3.0 或 Riverbank 商业许可
+
+# ---- Vision ----
+opencv-python==4.9.0.80        # OpenCV: Apache-2.0；Python 打包脚本: MIT
+numpy>=1.24,<2.0               # BSD-3-Clause；兼容 PyTorch 2.2.x
+
+# ---- 框架（含模型结构与训练逻辑）----
+ultralytics==8.2.19            # AGPL-3.0
+
+# ---- 打包（可选，仅 Windows EXE 发布时需要）----
+# pyinstaller>=6.0
+# pyinstaller-hooks-contrib

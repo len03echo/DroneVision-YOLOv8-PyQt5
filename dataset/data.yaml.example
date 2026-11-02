@@ -1,0 +1,11 @@
+# DroneVision 数据集配置示例
+# 用法：复制本文件为 data.yaml，并按你本地的数据集路径修改 train/val/test。
+# 原始数据集来源见 README 的「数据集来源」一节（Roboflow, Public Domain）。
+
+# 推荐使用相对路径（相对于 dataset/ 目录），或写绝对路径指向你解压后的数据集。
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 1
+names: ['drone']

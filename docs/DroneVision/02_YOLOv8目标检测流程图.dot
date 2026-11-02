@@ -1,0 +1,20 @@
+digraph G {
+  graph [bgcolor="white", pad="0.28", nodesep="0.32", ranksep="0.55", fontname="Noto Sans CJK SC", splines=polyline, outputorder=edgesfirst];
+  node [fontname="Noto Sans CJK SC", fontsize=15, color="#C8DBEE", fontcolor="#193450", style="rounded,filled", fillcolor="#F0F7FF", shape=box, margin="0.18,0.13", penwidth=1.4];
+  edge [fontname="Noto Sans CJK SC", fontsize=11, color="#6090C3", fontcolor="#466B90", penwidth=1.5, arrowsize=0.65];
+
+  graph [rankdir=TB, ranksep="0.27", nodesep="0.24"];
+  start [label="输入图像\nBGR格式", fillcolor="#DBECFF", color="#75A8E1"];
+  prep [label="图像预处理\nLetterBox缩放与填充 · 像素归一化", fillcolor="#EAF3FF"];
+  backbone [label="Backbone  骨干网络\nC2f等模块提取多尺度特征", fillcolor="#DBEAFE", color="#80ACDE"];
+  neck [label="Neck  特征融合\nFPN / PAN 多尺度双向特征融合", fillcolor="#DBEAFE", color="#80ACDE"];
+  head [label="Head  解耦检测头\n分类与边界框回归 · 多尺度输出", fillcolor="#DBEAFE", color="#80ACDE"];
+  decode [label="Anchor-Free预测与边界框解码\n得到候选框坐标及类别得分", fillcolor="#DDEEFF"];
+  conf [label="置信度筛选\nConf ≥ 0.25（界面可调）", shape=diamond, fillcolor="#FFF1D8", color="#E8B66A", margin="0.25,0.11"];
+  nms [label="NMS 非极大值抑制\nIoU阈值：默认0.45", fillcolor="#E8F6EE", color="#92C7AB"];
+  boxes [label="输出目标框\n类别：drone · 置信度 · 坐标", fillcolor="#E8F6EE", color="#92C7AB"];
+  draw [label="OpenCV绘制目标框与标签\n统计目标数量 / 推理耗时", fillcolor="#E8F6EE", color="#92C7AB"];
+  end [label="返回检测结果图像", fillcolor="#DDF1E9", color="#7DC0A4"];
+  start -> prep -> backbone -> neck -> head -> decode -> conf -> nms -> boxes -> draw -> end;
+
+}
